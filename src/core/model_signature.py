@@ -5,6 +5,8 @@ from typing import Type
 from src.core.processor import QAPromptProcessor
 import dspy
 from src.utils.config import config
+from src.core.template_registry import TemplateRegistry
+
 
 processor = QAPromptProcessor(config)
 
@@ -15,17 +17,20 @@ def load_prompt_template(template_path: str) -> str:
         return f.read()
 
 
-def build_qa_signature_from_template(template_path: str) -> Type[dspy.Signature]:
+def build_qa_signature_from_latest_template(
+    registry: TemplateRegistry,
+    category: str = "optimized",
+    name_prefix: str = None,
+) -> Type[dspy.Signature]:
     """
-    Dynamically build a DSPy Signature for QA generation.
+    Build a DSPy Signature using the most recent optimized prompt template.
+    """
+    template_path = registry.get_latest_prompt_template_path(
+        category=category,
+        use_user_dir=True,
+        name_prefix=name_prefix,
+    )
 
-    - The class docstring is set to the template content.
-    - Inputs:
-        * context: big user document
-        * num_questions: how many Q&A pairs to generate
-    - Output:
-        * qa_json: JSON string of Q&A pairs
-    """
     raw_prompt_text = load_prompt_template(template_path)
     prompt_text = processor.render(raw_prompt_text)
 
