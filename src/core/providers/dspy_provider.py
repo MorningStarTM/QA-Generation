@@ -3,8 +3,8 @@ from typing import Dict, Any, Optional, List, Union
 import dspy
 from src.core.providers.model_provider import ModelProvider
 from src.utils.logger import logger
-from src.core.model_signature import build_qa_signature_from_template
-
+from src.core.model_signature import build_qa_signature_from_latest_template
+from src.core.template_registry import TemplateRegistry
 
 class DspyProvider(ModelProvider):
     """
@@ -41,11 +41,12 @@ class DspyProvider(ModelProvider):
 
         # Initialize underlying DSPy LM
         self.lm = dspy.LM(self.model_name, **lm_kwargs)
+        self.registry = TemplateRegistry(config=config)
 
         # Optional: configure global DSPy default LM
         dspy.configure(lm=self.lm)
 
-        self.signature = build_qa_signature_from_template(config.get("qa_template_path", "src/templates/qa_template.txt"))
+        self.signature = build_qa_signature_from_latest_template(registry=self.registry)#(config.get("qa_template_path", "src/templates/qa_template.txt"))
 
         # Call base init to store model_name
         super().__init__(model_name=self.model_name)
