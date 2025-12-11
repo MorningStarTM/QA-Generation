@@ -111,7 +111,7 @@ class QAGenerator:
         div_score, _ = self.div_metric(qa2json)
 
         if info_score < 0.65 or div_score < 0.5:
-            optimizer = dspy.SIMBA(metric=composite_metric, bsize=2)
+            optimizer = dspy.SIMBA(metric=composite_metric, bsize=2, max_steps=2)
             optimized_program = optimizer.compile(self.provider.predictor, trainset=trainset)
             self.registry.save_prompt_template(
                 name="qa_optimized_prompt",
