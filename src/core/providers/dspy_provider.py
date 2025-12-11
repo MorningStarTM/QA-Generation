@@ -47,6 +47,7 @@ class DspyProvider(ModelProvider):
         dspy.configure(lm=self.lm)
 
         self.signature = build_qa_signature_from_latest_template(registry=self.registry)#(config.get("qa_template_path", "src/templates/qa_template.txt"))
+        self.predictor = dspy.Predict(signature=self.signature)
 
         # Call base init to store model_name
         super().__init__(model_name=self.model_name)
@@ -69,10 +70,10 @@ class DspyProvider(ModelProvider):
             # Build a Predict module on top of our FreeFormGeneration signature.
             # If you want per-call settings (like temperature), you can pass them
             # into dspy.settings or incorporate them into the template.
-            predictor = dspy.Predict(signature=self.signature)
+            
 
             # Call it with the instruction as input
-            result = predictor(context=context)
+            result = self.predictor(context=context)
 
             # Return the completion field
             return result
