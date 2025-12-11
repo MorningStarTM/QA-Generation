@@ -75,7 +75,7 @@ class TemplateRegistry:
 
     def get_latest_prompt_template_path(
         self,
-        category: str = "optimized",
+        category: str = None,
         use_user_dir: bool = False,
         name_prefix: Optional[str] = None,
     ) -> str:
