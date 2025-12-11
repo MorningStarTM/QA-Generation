@@ -19,7 +19,7 @@ def load_prompt_template(template_path: str) -> str:
 
 def build_qa_signature_from_latest_template(
     registry: TemplateRegistry,
-    category: str = "optimized",
+    category: str = None,
     name_prefix: str = None,
 ) -> Type[dspy.Signature]:
     """
@@ -27,7 +27,7 @@ def build_qa_signature_from_latest_template(
     """
     template_path = registry.get_latest_prompt_template_path(
         category=category,
-        use_user_dir=True,
+        use_user_dir=False,
         name_prefix=name_prefix,
     )
 
